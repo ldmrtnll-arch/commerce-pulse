@@ -12,5 +12,5 @@ export default async function OrderDetailsPage({
   searchParams: Promise<Record<string, string | string[] | undefined>>;
 }) {
   const [{ orderId }, query] = await Promise.all([params, searchParams]);
-  return <OrderDetails orderId={orderId} returnTo={getSafeReturnUrl(query.returnTo, "/orders")} />;
+  return <OrderDetails orderId={orderId} returnTo={getSafeReturnUrl(query.returnTo, "/orders", ["/orders", "/customers"])} />;
 }

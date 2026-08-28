@@ -4,7 +4,7 @@ CommercePulse is a frontend-focused SaaS dashboard for tracking sales, orders, c
 
 ## Overview
 
-This repository demonstrates a production-minded frontend application built with Next.js and TypeScript. The current phase combines a polished dashboard foundation with complete read-only Orders and Products workspaces driven by URL state and mock API boundaries.
+This repository demonstrates a production-minded frontend application built with Next.js and TypeScript. The current phase combines a polished dashboard foundation with complete read-only Orders, Products, and Customers workspaces driven by URL state and mock API boundaries.
 
 The demo workspace represents **Northstar Store**. All information is deterministic mock data designed for stable development, testing, and screenshots.
 
@@ -19,6 +19,12 @@ The demo workspace represents **Northstar Store**. All information is determinis
 - Responsive desktop product table and mobile product cards
 - Dedicated product details with catalog, inventory, pricing, and performance summaries
 - Cross-domain fixture integrity between Order items and Product IDs/SKUs
+- Customer aggregates derived from the 90 existing Orders, enriched by deterministic profiles
+- Customer segmentation with New, Returning, Loyal, and At risk behavioral groups
+- Customer search, acquisition and segment filters, value-based sorting, URL state, and pagination
+- Lifetime value, average order value, deterministic recency, and global customer metrics
+- Dedicated customer details with contact information, segment insight, and real order history
+- Cross-feature navigation from Customer Details to the existing Order Details with safe return state
 - TanStack Query caching with loading, background-fetching, empty, error, and retry states
 - Mock APIs with deterministic latency, controlled development errors, and paginated responses
 - Professional placeholder pages for future product areas
@@ -49,6 +55,14 @@ deterministic fixtures -> mock API -> TanStack Query hooks -> domain UI
 ```
 
 Each mock API owns its search, filtering, sorting, latency, and pagination. Production UI components never import the complete fixture datasets directly. Shared concerns such as latency, safe return URLs, badges, and pagination live outside individual domains.
+
+Customers intentionally begins from an existing domain relationship instead of an independent fixture dataset:
+
+```text
+Orders -> customer aggregation + deterministic profiles -> customer mock API -> TanStack Query -> Customer UI
+```
+
+Identity, order count, lifetime value, average order value, first and last order, and recency are derived once from Orders. Profiles only supply complementary fields such as phone, join date, and acquisition channel.
 
 ## Getting Started
 
@@ -86,7 +100,7 @@ Open [http://localhost:3000](http://localhost:3000) in your browser.
 
 ## Testing
 
-Unit and component tests cover dashboard presentation, the Orders and Products mock APIs, URL parameter normalization, stock-health boundaries, fixture integrity, status presentation, navigation, and asynchronous UI states. Playwright covers dashboard navigation, responsive navigation, Orders flows, Products search, filtering, pagination, and product details with preserved return state.
+Unit and component tests cover dashboard presentation, the Orders, Products, and Customers mock APIs, URL parameter normalization, stock-health and customer-segment boundaries, cross-domain integrity, status presentation, navigation, and asynchronous UI states. Playwright covers responsive navigation plus complete Orders, Products, and Customers flows, including cross-feature navigation with preserved return state.
 
 Playwright requires a browser binary on the first run:
 
@@ -107,7 +121,8 @@ src/
 |-- features/
 |   |-- dashboard/             # Dashboard-specific components and tests
 |   |-- orders/                # Orders fixtures, mock API, hooks, and UI
-|   `-- products/              # Products fixtures, inventory rules, API, hooks, and UI
+|   |-- products/              # Products fixtures, inventory rules, API, hooks, and UI
+|   `-- customers/             # Profiles, aggregation, segments, API, hooks, and UI
 |-- hooks/                     # Shared React hooks
 |-- lib/                       # Reusable formatting and mock API utilities
 |-- mocks/                     # Dashboard fixtures and product projections
@@ -117,7 +132,7 @@ e2e/                           # Playwright user flows
 
 ## Roadmap
 
-- Customer segmentation and detailed analytics
+- Customer cohort and behavioral analytics
 - Campaign performance reporting
 - Validated settings forms
 - Expanded component and end-to-end coverage
@@ -125,6 +140,6 @@ e2e/                           # Playwright user flows
 
 ## Current Status
 
-**Phase 3 — Products & Inventory Management**
+**Phase 4 — Customer Management & Segmentation**
 
-The application foundation, overview experience, read-only Orders workflow, and Products and Inventory management workflow are implemented. Customer, analytics, campaign, and settings workspaces intentionally remain concise placeholders for later phases.
+The application foundation, overview experience, read-only Orders workflow, Products and Inventory management, and derived Customer Management and Segmentation workflow are implemented. Analytics, campaign, and settings workspaces intentionally remain concise placeholders for later phases.

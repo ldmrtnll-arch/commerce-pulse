@@ -23,13 +23,14 @@ function DetailSkeleton() {
 }
 
 function DetailError({ notFound, onRetry, returnTo }: { notFound: boolean; onRetry: () => void; returnTo: string }) {
+  const backLabel = returnTo.startsWith("/customers/") ? "Back to customer" : "Back to orders";
   return (
     <div className="flex min-h-[28rem] flex-col items-center justify-center rounded-card border border-dashed border-slate-300 bg-card px-6 text-center">
       <span className="flex size-11 items-center justify-center rounded-xl bg-red-50 text-destructive"><AlertCircle aria-hidden="true" className="size-5" /></span>
       <h1 className="mt-4 text-xl font-semibold text-slate-950">{notFound ? "Order not found" : "Unable to load order"}</h1>
       <p className="mt-2 max-w-sm text-sm text-muted-foreground">{notFound ? "This order does not exist or may have been removed." : "We couldn't load this order right now."}</p>
       <div className="mt-5 flex gap-3">
-        <Link href={returnTo} className="inline-flex h-9 items-center rounded-lg border border-border bg-card px-3 text-sm font-medium transition-colors hover:bg-muted focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary">Back to orders</Link>
+        <Link href={returnTo} className="inline-flex h-9 items-center rounded-lg border border-border bg-card px-3 text-sm font-medium transition-colors hover:bg-muted focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary">{backLabel}</Link>
         {!notFound && <Button type="button" onClick={onRetry}><RotateCw aria-hidden="true" className="size-4" /> Try again</Button>}
       </div>
     </div>
@@ -87,10 +88,11 @@ function ContactDetails({ order }: { order: Order }) {
 }
 
 function OrderContent({ order, returnTo }: { order: Order; returnTo: string }) {
+  const backLabel = returnTo.startsWith("/customers/") ? "Back to customer" : "Back to orders";
   return (
     <div className="space-y-6">
       <Link href={returnTo} className="inline-flex items-center gap-1.5 text-sm font-medium text-muted-foreground transition-colors hover:text-slate-900 focus-visible:rounded focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary">
-        <ArrowLeft aria-hidden="true" className="size-4" /> Back to orders
+        <ArrowLeft aria-hidden="true" className="size-4" /> {backLabel}
       </Link>
       <header className="flex flex-col gap-4 rounded-card border border-border bg-card p-5 sm:flex-row sm:items-center sm:justify-between sm:p-6">
         <div>
