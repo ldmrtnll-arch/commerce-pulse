@@ -1,22 +1,17 @@
 import { orderFixtures, ORDERS_DATASET_REFERENCE_DATE } from "../fixtures/orders";
 import type { GetOrdersParams, PaginatedOrders } from "../types";
 import type { Order } from "@/types/order";
+import { waitForMockApi } from "@/lib/mock-api";
 
 interface MockApiOptions {
   latencyMs?: number;
 }
-
-const DEFAULT_LATENCY_MS = 400;
 
 export class OrderNotFoundError extends Error {
   constructor(orderId: string) {
     super(`Order ${orderId} was not found.`);
     this.name = "OrderNotFoundError";
   }
-}
-
-function wait(latencyMs: number): Promise<void> {
-  return new Promise((resolve) => setTimeout(resolve, latencyMs));
 }
 
 function getPeriodStart(period: GetOrdersParams["period"]): number | null {
@@ -30,7 +25,7 @@ export async function getOrders(
   params: GetOrdersParams,
   options: MockApiOptions = {},
 ): Promise<PaginatedOrders> {
-  await wait(options.latencyMs ?? DEFAULT_LATENCY_MS);
+  await waitForMockApi(options.latencyMs);
 
   if (params.simulateError && process.env.NODE_ENV !== "production") {
     throw new Error("The controlled mock request failed.");
@@ -72,7 +67,7 @@ export async function getOrderById(
   orderId: string,
   options: MockApiOptions = {},
 ): Promise<Order> {
-  await wait(options.latencyMs ?? DEFAULT_LATENCY_MS);
+  await waitForMockApi(options.latencyMs);
   const order = orderFixtures.find(
     (candidate) => candidate.id === orderId || candidate.number.toLowerCase() === orderId.toLowerCase(),
   );

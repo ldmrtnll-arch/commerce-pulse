@@ -1,23 +1,26 @@
 # CommercePulse
 
-CommercePulse is a frontend-focused SaaS dashboard for tracking sales, orders, customers, and product performance for a fictional commerce business.
+CommercePulse is a frontend-focused SaaS dashboard for tracking sales, orders, customers, products, and inventory for a fictional commerce business.
 
 ## Overview
 
-This repository demonstrates a production-minded frontend application built with Next.js and TypeScript. The current phase combines a polished dashboard foundation with a complete read-only Orders workspace driven by URL state and a mock API boundary.
+This repository demonstrates a production-minded frontend application built with Next.js and TypeScript. The current phase combines a polished dashboard foundation with complete read-only Orders and Products workspaces driven by URL state and mock API boundaries.
 
 The demo workspace represents **Northstar Store**. All information is deterministic mock data designed for stable development, testing, and screenshots.
 
 ## Current Features
 
 - Responsive SaaS shell with persistent desktop navigation and an accessible mobile drawer
-- Overview dashboard with commerce metrics, a 30-day revenue chart, recent orders, and top products
-- Orders workspace with debounced search by number, customer, or email
-- URL-driven status and period filters, sorting, and real pagination
-- Responsive desktop order table and mobile order cards
-- Dedicated order details with item, payment, customer, and shipping summaries
+- Overview dashboard with commerce metrics, a 30-day revenue chart, recent orders, and top products derived from the catalog
+- Orders workspace with debounced search, URL-driven filters and sorting, pagination, and dedicated order details
+- Products workspace backed by a deterministic catalog of 72 products across six categories
+- Product search by name or SKU, lifecycle and stock filters, sorting, and real pagination
+- Independent lifecycle and stock-health indicators, inventory metrics, and accessible stock-level visualization
+- Responsive desktop product table and mobile product cards
+- Dedicated product details with catalog, inventory, pricing, and performance summaries
+- Cross-domain fixture integrity between Order items and Product IDs/SKUs
 - TanStack Query caching with loading, background-fetching, empty, error, and retry states
-- Mock API with deterministic latency, controlled development errors, and paginated responses
+- Mock APIs with deterministic latency, controlled development errors, and paginated responses
 - Professional placeholder pages for future product areas
 - Custom 404 page and global product metadata
 
@@ -39,13 +42,13 @@ The demo workspace represents **Northstar Store**. All information is determinis
 
 Server Components are the default. Client Components are limited to interactive or browser-dependent areas such as charts, navigation controls, and TanStack Query consumers. Domain code is grouped under `features`, while shared visual primitives remain under `components/ui`.
 
-Orders follows a replaceable data boundary:
+Orders and Products follow the same replaceable data boundary:
 
 ```text
-deterministic fixtures -> mock API -> TanStack Query hooks -> Orders UI
+deterministic fixtures -> mock API -> TanStack Query hooks -> domain UI
 ```
 
-The mock API owns search, filtering, sorting, latency, and pagination. Production UI components never import the Orders dataset directly.
+Each mock API owns its search, filtering, sorting, latency, and pagination. Production UI components never import the complete fixture datasets directly. Shared concerns such as latency, safe return URLs, badges, and pagination live outside individual domains.
 
 ## Getting Started
 
@@ -83,7 +86,7 @@ Open [http://localhost:3000](http://localhost:3000) in your browser.
 
 ## Testing
 
-Unit and component tests cover dashboard presentation, Orders API behavior, query parameter normalization, status presentation, navigation, and asynchronous UI states. Playwright covers dashboard navigation, Orders search, filtering, pagination, details, preserved return state, and the mobile drawer.
+Unit and component tests cover dashboard presentation, the Orders and Products mock APIs, URL parameter normalization, stock-health boundaries, fixture integrity, status presentation, navigation, and asynchronous UI states. Playwright covers dashboard navigation, responsive navigation, Orders flows, Products search, filtering, pagination, and product details with preserved return state.
 
 Playwright requires a browser binary on the first run:
 
@@ -96,24 +99,24 @@ npx playwright install chromium
 ```text
 src/
 |-- app/                       # App Router layouts and routes
-|   `-- (dashboard)/           # Shared application shell
+|   `-- (dashboard)/           # Shared application shell and domain routes
 |-- components/
 |   |-- layout/                # Navigation, header, and shell components
 |   |-- providers/             # Application-level client providers
-|   `-- ui/                    # Small shared visual primitives
+|   `-- ui/                    # Shared badges, cards, buttons, and pagination
 |-- features/
 |   |-- dashboard/             # Dashboard-specific components and tests
-|   `-- orders/                # Fixtures, mock API, hooks, and Orders UI
+|   |-- orders/                # Orders fixtures, mock API, hooks, and UI
+|   `-- products/              # Products fixtures, inventory rules, API, hooks, and UI
 |-- hooks/                     # Shared React hooks
-|-- lib/                       # Reusable formatting utilities
-|-- mocks/                     # Dashboard fixtures and projections
+|-- lib/                       # Reusable formatting and mock API utilities
+|-- mocks/                     # Dashboard fixtures and product projections
 `-- types/                     # Shared domain types
 e2e/                           # Playwright user flows
 ```
 
 ## Roadmap
 
-- Product inventory and low-stock views
 - Customer segmentation and detailed analytics
 - Campaign performance reporting
 - Validated settings forms
@@ -122,6 +125,6 @@ e2e/                           # Playwright user flows
 
 ## Current Status
 
-**Phase 2 — Orders Management**
+**Phase 3 — Products & Inventory Management**
 
-The application foundation, overview experience, and read-only Orders management workflow are implemented. Product, customer, analytics, campaign, and settings workspaces intentionally remain concise placeholders for later phases.
+The application foundation, overview experience, read-only Orders workflow, and Products and Inventory management workflow are implemented. Customer, analytics, campaign, and settings workspaces intentionally remain concise placeholders for later phases.
