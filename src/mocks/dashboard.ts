@@ -5,6 +5,7 @@ import type {
   TopProduct,
 } from "@/types/dashboard";
 import { orderFixtures } from "@/features/orders/fixtures/orders";
+import { productFixtures } from "@/features/products/fixtures/products";
 
 export const dashboardMetrics: DashboardMetric[] = [
   { label: "Total revenue", value: "$128,430.52", change: 12.5, trend: "up" },
@@ -39,9 +40,12 @@ export const recentOrders: RecentOrder[] = orderFixtures.slice(0, 5).map((order)
   total: order.total,
 }));
 
-export const topProducts: TopProduct[] = [
-  { name: "Everyday Carry Backpack", category: "Accessories", unitsSold: 284, revenue: 21300 },
-  { name: "Merino Crew Sweater", category: "Apparel", unitsSold: 219, revenue: 17520 },
-  { name: "Studio Wireless Headphones", category: "Electronics", unitsSold: 142, revenue: 16918 },
-  { name: "Insulated Travel Bottle", category: "Home & Living", unitsSold: 306, revenue: 10710 },
-];
+export const topProducts: TopProduct[] = [...productFixtures]
+  .sort((left, right) => right.unitsSold - left.unitsSold)
+  .slice(0, 4)
+  .map((product) => ({
+    name: product.name,
+    category: product.category.charAt(0).toUpperCase() + product.category.slice(1),
+    unitsSold: product.unitsSold,
+    revenue: product.revenue,
+  }));

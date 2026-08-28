@@ -3,7 +3,7 @@
 import { RefreshCw } from "lucide-react";
 import { OrdersCollection } from "./orders-collection";
 import { OrdersFilters } from "./orders-filters";
-import { OrdersPagination } from "./orders-pagination";
+import { Pagination } from "@/components/ui/pagination";
 import { OrdersEmptyState, OrdersErrorState, OrdersSkeleton } from "./orders-states";
 import { useOrders } from "../hooks/use-orders";
 import { useOrderUrlState } from "../hooks/use-order-url-state";
@@ -31,8 +31,10 @@ export function OrdersWorkspace() {
           <div className={ordersQuery.isFetching ? "opacity-70 transition-opacity" : "transition-opacity"}>
             <OrdersCollection orders={ordersQuery.data.data} returnUrl={returnUrl} />
           </div>
-          <OrdersPagination
+          <Pagination
             {...ordersQuery.data.pagination}
+            itemLabel="orders"
+            ariaLabel="Orders pagination"
             onPageChange={(page) => updateParams({ page })}
           />
         </>
