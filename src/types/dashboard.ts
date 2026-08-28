@@ -12,13 +12,7 @@ export interface RevenuePoint {
   revenue: number;
 }
 
-export type OrderStatus =
-  | "Pending"
-  | "Processing"
-  | "Shipped"
-  | "Delivered"
-  | "Cancelled"
-  | "Refunded";
+import type { OrderStatus } from "./order";
 
 export interface RecentOrder {
   id: string;

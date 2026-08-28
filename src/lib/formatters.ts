@@ -26,5 +26,6 @@ export function formatCompactCurrency(value: number): string {
 }
 
 export function formatDate(value: string): string {
-  return dateFormatter.format(new Date(`${value}T00:00:00Z`));
+  const normalizedDate = value.includes("T") ? value : `${value}T00:00:00Z`;
+  return dateFormatter.format(new Date(normalizedDate));
 }

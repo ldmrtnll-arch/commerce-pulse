@@ -4,7 +4,7 @@ import { StatusBadge } from "./status-badge";
 
 describe("StatusBadge", () => {
   it("presents the order status", () => {
-    render(<StatusBadge status="Delivered" />);
+    render(<StatusBadge status="delivered" />);
 
     expect(screen.getByText("Delivered")).toBeVisible();
   });

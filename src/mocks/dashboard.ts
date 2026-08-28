@@ -4,6 +4,7 @@ import type {
   RevenuePoint,
   TopProduct,
 } from "@/types/dashboard";
+import { orderFixtures } from "@/features/orders/fixtures/orders";
 
 export const dashboardMetrics: DashboardMetric[] = [
   { label: "Total revenue", value: "$128,430.52", change: 12.5, trend: "up" },
@@ -30,13 +31,13 @@ export const revenueData: RevenuePoint[] = [
   { date: "Aug 29", revenue: 8900 }, { date: "Aug 30", revenue: 9600 },
 ];
 
-export const recentOrders: RecentOrder[] = [
-  { id: "ORD-1048", customer: "Olivia Martin", date: "2026-08-27", status: "Delivered", total: 184.5 },
-  { id: "ORD-1047", customer: "Ethan Williams", date: "2026-08-27", status: "Processing", total: 96.2 },
-  { id: "ORD-1046", customer: "Sophia Brown", date: "2026-08-26", status: "Shipped", total: 248.75 },
-  { id: "ORD-1045", customer: "Noah Davis", date: "2026-08-26", status: "Pending", total: 72.4 },
-  { id: "ORD-1044", customer: "Mia Anderson", date: "2026-08-25", status: "Refunded", total: 129.9 },
-];
+export const recentOrders: RecentOrder[] = orderFixtures.slice(0, 5).map((order) => ({
+  id: order.number,
+  customer: order.customer.name,
+  date: order.createdAt,
+  status: order.status,
+  total: order.total,
+}));
 
 export const topProducts: TopProduct[] = [
   { name: "Everyday Carry Backpack", category: "Accessories", unitsSold: 284, revenue: 21300 },
