@@ -4,7 +4,7 @@ CommercePulse is a frontend-focused SaaS dashboard for tracking sales, orders, c
 
 ## Overview
 
-This repository demonstrates a production-minded frontend application built with Next.js and TypeScript. The current phase combines a polished dashboard foundation with complete read-only Orders, Products, Customers, Analytics, and Campaigns workspaces driven by URL state and mock API boundaries.
+This repository demonstrates a production-minded frontend application built with Next.js and TypeScript. The current phase combines a polished dashboard foundation with complete Orders, Products, Customers, Analytics, Campaigns, and persisted Settings workspaces.
 
 The demo workspace represents **Northstar Store**. All information is deterministic mock data designed for stable development, testing, and screenshots.
 
@@ -38,7 +38,12 @@ The demo workspace represents **Northstar Store**. All information is determinis
 - Safe cross-feature navigation from Campaign Details to the existing Customer Details and back
 - TanStack Query caching with loading, background-fetching, empty, error, and retry states
 - Mock APIs with deterministic latency, controlled development errors, and paginated responses
-- Professional placeholder pages for future product areas
+- Settings forms for store identity, regional preferences, event notifications, density, and reduced motion
+- Independent dirty, save, saving, and reset behavior for every Settings section
+- Zod validation at both the form and persistence boundaries
+- Versioned localStorage persistence behind a repository and mock API, with safe recovery from invalid data
+- Accessible success/error toasts and a Radix confirmation dialog for unsaved section changes
+- A live, scoped Appearance preview without changing the application-wide theme
 - Custom 404 page and global product metadata
 
 ## Tech Stack
@@ -50,7 +55,7 @@ The demo workspace represents **Northstar Store**. All information is determinis
 - Recharts
 - Lucide React
 - Radix UI Dialog
-- React Hook Form and Zod (prepared for upcoming forms)
+- React Hook Form and Zod
 - Vitest, React Testing Library, and jsdom
 - Playwright
 - ESLint
@@ -96,6 +101,15 @@ Customers + Acquisition Channels + Orders
 
 Each attributed customer belongs to at most one campaign whose channel matches the customer acquisition channel. Direct and Organic Search customers remain unattributed. As a simple first-touch model, a campaign receives all available economically eligible orders from its attributed customers, including repeat orders outside the campaign date range; no multi-touch or date-window weighting is attempted. Attributed revenue and orders reuse the shared net-sales eligibility rule: pending, processing, shipped, and delivered orders are included; cancelled and refunded orders are excluded. ROAS is attributed revenue divided by spend and is unavailable when spend is zero. Budget utilization is spend divided by budget; deterministic fixtures never overspend.
 
+Settings uses an intentionally replaceable, browser-only persistence flow:
+
+```text
+React Hook Form + Zod -> TanStack Query mutation -> mock API -> validated repository -> localStorage
+                                                        -> query cache -> reset dirty state + toast
+```
+
+The repository owns the versioned `commerce-pulse.settings.v1` key and validates the entire stored document before use. Missing, corrupt, partial, or invalid data safely falls back to deterministic defaults. This is a frontend simulation rather than account-synced backend storage: preferences remain in the current browser only. General, Notifications, and Appearance save independently, while URL state identifies the active non-default section.
+
 ## Getting Started
 
 ### Prerequisites
@@ -132,7 +146,7 @@ Open [http://localhost:3000](http://localhost:3000) in your browser.
 
 ## Testing
 
-Unit and component tests cover dashboard presentation, the Orders, Products, Customers, Analytics, and Campaigns boundaries, URL normalization, inclusive date windows, revenue eligibility, attribution integrity, ROAS, budget rules, zero-filled time series, cross-domain integrity, semantic tables, status presentation, navigation, and asynchronous UI states. Playwright covers complete Orders, Products, Customers, Analytics, and Campaigns flows, including cross-feature navigation with preserved return state.
+Unit and component tests cover all established domain boundaries, Settings schemas and repository recovery, independent form behavior, validation, live preview, mutation retries, and unsaved-change confirmation. Playwright covers complete Orders, Products, Customers, Analytics, Campaigns, and Settings flows, including persistence across reloads.
 
 Playwright requires a browser binary on the first run:
 
@@ -156,7 +170,8 @@ src/
 |   |-- products/              # Products fixtures, inventory rules, API, hooks, and UI
 |   |-- customers/             # Profiles, aggregation, segments, API, hooks, and UI
 |   |-- analytics/             # Periods, cross-domain aggregation, API, hooks, and insight UI
-|   `-- campaigns/             # Fixtures, attribution, metrics, API, hooks, list, and details
+|   |-- campaigns/             # Fixtures, attribution, metrics, API, hooks, list, and details
+|   `-- settings/              # Schemas, repository, mock API, Query hooks, forms, and preview
 |-- hooks/                     # Shared React hooks
 |-- lib/                       # Reusable formatting and mock API utilities
 |-- mocks/                     # Dashboard fixtures and product projections
@@ -166,14 +181,10 @@ e2e/                           # Playwright user flows
 
 ## Roadmap
 
-- Custom date ranges, comparison controls, and exportable reports
-- Validated settings forms
-- Final accessibility and interaction polish
-- Expanded component and end-to-end coverage
-- CI quality pipeline
+- Phase 8 — Portfolio Polish & Release
 
 ## Current Status
 
-**Phase 6 — Campaign Management & Marketing Performance**
+**Phase 7 — Settings, Forms & User Preferences**
 
-The application foundation, overview experience, read-only Orders workflow, Products and Inventory management, derived Customer Management and Segmentation workflow, cross-domain Analytics, and read-only Campaign Management are implemented. Settings remains the final placeholder for the next phase.
+The application foundation and all primary commerce workspaces are implemented. Settings now provides validated, independently persisted General, Notifications, and Appearance forms with deterministic loading and error states, mutation feedback, dirty/reset behavior, accessible unsaved-change confirmation, and responsive presentation. Phase 8 is reserved for final portfolio polish, CI, and release work.
