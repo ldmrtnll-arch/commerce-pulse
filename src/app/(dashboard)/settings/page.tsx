@@ -1,3 +1,7 @@
-import { Settings } from "lucide-react";
-import { ComingSoonPage } from "@/components/layout/coming-soon-page";
-export default function SettingsPage() { return <ComingSoonPage title="Settings" description="Configure store preferences and notifications." icon={Settings} />; }
+import { Suspense } from "react";
+import { SettingsLoading } from "@/features/settings/components/settings-states";
+import { SettingsWorkspace } from "@/features/settings/components/settings-workspace";
+
+export default function SettingsPage() {
+  return <Suspense fallback={<SettingsLoading />}><SettingsWorkspace /></Suspense>;
+}
