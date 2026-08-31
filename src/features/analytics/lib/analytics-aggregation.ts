@@ -1,5 +1,6 @@
 import { customerAggregates } from "@/features/customers/lib/customer-aggregation";
 import { orderFixtures } from "@/features/orders/fixtures/orders";
+import { isRevenueEligibleOrder } from "@/features/orders/lib/order-economics";
 import { getProductCategoryLabel } from "@/features/products/lib/product-labels";
 import { productFixtures } from "@/features/products/fixtures/products";
 import { acquisitionChannels, customerSegments, type Customer } from "@/types/customer";
@@ -10,9 +11,7 @@ import { getAnalyticsRanges, isDateInRange } from "./analytics-period";
 
 const DAY_IN_MS = 24 * 60 * 60 * 1000;
 
-export function isRevenueOrder(order: Order): boolean {
-  return order.status !== "cancelled" && order.status !== "refunded";
-}
+export const isRevenueOrder = isRevenueEligibleOrder;
 
 function round(value: number): number {
   return Math.round((value + Number.EPSILON) * 100) / 100;
