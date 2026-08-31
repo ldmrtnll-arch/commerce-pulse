@@ -25,13 +25,15 @@ function NavigationLink({
   href,
   label,
   icon: Icon,
-}: (typeof primaryNavigation)[number] | { href: string; label: string; icon: typeof Settings }) {
+  onNavigate,
+}: ((typeof primaryNavigation)[number] | { href: string; label: string; icon: typeof Settings }) & { onNavigate?: () => void }) {
   const pathname = usePathname();
   const isActive = href === "/" ? pathname === href : pathname.startsWith(href);
 
   return (
     <Link
       href={href}
+      onClick={onNavigate}
       aria-current={isActive ? "page" : undefined}
       className={`flex h-10 items-center gap-3 rounded-lg px-3 text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary ${
         isActive
@@ -45,14 +47,14 @@ function NavigationLink({
   );
 }
 
-export function NavLinks() {
+export function NavLinks({ onNavigate }: { onNavigate?: () => void } = {}) {
   return (
     <div className="flex min-h-0 flex-1 flex-col">
       <nav aria-label="Primary navigation" className="space-y-1">
-        {primaryNavigation.map((item) => <NavigationLink key={item.href} {...item} />)}
+        {primaryNavigation.map((item) => <NavigationLink key={item.href} {...item} onNavigate={onNavigate} />)}
       </nav>
       <nav aria-label="Settings navigation" className="mt-auto border-t border-border pt-4">
-        <NavigationLink href="/settings" label="Settings" icon={Settings} />
+        <NavigationLink href="/settings" label="Settings" icon={Settings} onNavigate={onNavigate} />
       </nav>
     </div>
   );

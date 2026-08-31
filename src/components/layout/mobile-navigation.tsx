@@ -2,13 +2,15 @@
 
 import * as Dialog from "@radix-ui/react-dialog";
 import { Menu, X } from "lucide-react";
+import { useState } from "react";
 import { Brand } from "./brand";
 import { NavLinks } from "./nav-links";
 import { StoreProfile } from "./store-profile";
 
 export function MobileNavigation() {
+  const [open, setOpen] = useState(false);
   return (
-    <Dialog.Root>
+    <Dialog.Root open={open} onOpenChange={setOpen}>
       <Dialog.Trigger asChild>
         <button
           type="button"
@@ -32,7 +34,7 @@ export function MobileNavigation() {
             </Dialog.Close>
           </div>
           <div className="mt-8 flex min-h-0 flex-1 flex-col">
-            <NavLinks />
+            <NavLinks onNavigate={() => setOpen(false)} />
             <StoreProfile />
           </div>
         </Dialog.Content>

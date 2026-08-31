@@ -1,50 +1,44 @@
 # CommercePulse
 
-CommercePulse is a frontend-focused SaaS dashboard for tracking sales, orders, customers, products, and inventory for a fictional commerce business.
+**A frontend-focused commerce analytics SaaS built with Next.js, React, and TypeScript.**
+
+CommercePulse simulates the operational workspace of a modern e-commerce business, combining order management, inventory, customer segmentation, analytics, campaign attribution, and persistent settings in a deterministic frontend architecture.
+
+**Current status: v1.0.0 prepared for release.**
 
 ## Overview
 
-This repository demonstrates a production-minded frontend application built with Next.js and TypeScript. The current phase combines a polished dashboard foundation with complete Orders, Products, Customers, Analytics, Campaigns, and persisted Settings workspaces.
+The application represents **Northstar Store** and is designed as a portfolio project centered on frontend engineering: business rules, cross-domain integrity, asynchronous state, accessible interaction, responsive presentation, and reliable automated testing. Its mock APIs are an intentional replaceable boundary, not direct fixture access from the UI.
 
-The demo workspace represents **Northstar Store**. All information is deterministic mock data designed for stable development, testing, and screenshots.
+## Application Preview
 
-## Current Features
+### Dashboard
 
-- Responsive SaaS shell with persistent desktop navigation and an accessible mobile drawer
-- Overview dashboard with commerce metrics, a 30-day revenue chart, recent orders, and top products derived from the catalog
-- Orders workspace with debounced search, URL-driven filters and sorting, pagination, and dedicated order details
-- Products workspace backed by a deterministic catalog of 72 products across six categories
-- Product search by name or SKU, lifecycle and stock filters, sorting, and real pagination
-- Independent lifecycle and stock-health indicators, inventory metrics, and accessible stock-level visualization
-- Responsive desktop product table and mobile product cards
-- Dedicated product details with catalog, inventory, pricing, and performance summaries
-- Cross-domain fixture integrity between Order items and Product IDs/SKUs
-- Customer aggregates derived from the 90 existing Orders, enriched by deterministic profiles
-- Customer segmentation with New, Returning, Loyal, and At risk behavioral groups
-- Customer search, acquisition and segment filters, value-based sorting, URL state, and pagination
-- Lifetime value, average order value, deterministic recency, and global customer metrics
-- Dedicated customer details with contact information, segment insight, and real order history
-- Cross-feature navigation from Customer Details to the existing Order Details with safe return state
-- Analytics periods for the latest 7, 30, and 90 days, anchored to the deterministic Aug 28, 2026 dataset reference date
-- Net-sales, order, average-order-value, and active-customer KPIs with equal-length prior-period comparisons
-- Zero-filled daily revenue series plus product, category, customer-segment, acquisition-channel, and order-status insights
-- Cross-feature navigation from Analytics top products to Product Details with the selected period preserved
-- A reconciled Overview whose 30-day sales, orders, AOV, revenue series, and top products share the Analytics source of truth
-- A deterministic portfolio of 30 campaigns across Draft, Scheduled, Active, Paused, and Completed lifecycle states
-- First-touch campaign attribution aligned with existing acquisition channels and real Customers and Orders
-- Campaign budget, spend, attributed revenue, eligible orders, acquired customers, utilization, and ROAS metrics
-- Campaign search, status/channel filters, performance sorting, URL state, pagination, and responsive desktop/mobile presentation
-- Dedicated Campaign Details with performance, budget, information, and attributed-customer sections
-- Safe cross-feature navigation from Campaign Details to the existing Customer Details and back
-- TanStack Query caching with loading, background-fetching, empty, error, and retry states
-- Mock APIs with deterministic latency, controlled development errors, and paginated responses
-- Settings forms for store identity, regional preferences, event notifications, density, and reduced motion
-- Independent dirty, save, saving, and reset behavior for every Settings section
-- Zod validation at both the form and persistence boundaries
-- Versioned localStorage persistence behind a repository and mock API, with safe recovery from invalid data
-- Accessible success/error toasts and a Radix confirmation dialog for unsaved section changes
-- A live, scoped Appearance preview without changing the application-wide theme
-- Custom 404 page and global product metadata
+![CommercePulse dashboard](docs/screenshots/dashboard.png)
+
+### Orders
+
+![CommercePulse orders workspace](docs/screenshots/orders.png)
+
+### Analytics
+
+![CommercePulse analytics workspace](docs/screenshots/analytics.png)
+
+### Settings
+
+![CommercePulse settings workspace](docs/screenshots/settings.png)
+
+## Features
+
+- Reconciled Overview with 30-day sales KPIs, revenue trends, recent orders, and top products
+- Order search, status and period filters, sorting, pagination, and dedicated details
+- Catalog of 72 products with lifecycle, stock health, inventory thresholds, and performance
+- Thirty customers derived from Orders with lifetime value, recency, acquisition, and behavioral segments
+- Seven-, 30-, and 90-day analytics with prior-period comparisons and cross-domain insights
+- Thirty marketing campaigns with budgets, first-touch attribution, eligible revenue, and ROAS
+- Validated General, Notifications, and Appearance settings with independent save/reset behavior
+- URL-driven application state, deterministic loading/error behavior, and safe cross-feature return navigation
+- Responsive desktop tables and purpose-built mobile cards
 
 ## Tech Stack
 
@@ -52,75 +46,108 @@ The demo workspace represents **Northstar Store**. All information is determinis
 - TypeScript in strict mode
 - Tailwind CSS
 - TanStack Query
-- Recharts
-- Lucide React
-- Radix UI Dialog
 - React Hook Form and Zod
-- Vitest, React Testing Library, and jsdom
-- Playwright
-- ESLint
+- Recharts
+- Radix UI Dialog
+- Lucide React
+- Vitest, React Testing Library, jsdom, Playwright, and axe-core
 
 ## Architecture
 
-Server Components are the default. Client Components are limited to interactive or browser-dependent areas such as charts, navigation controls, and TanStack Query consumers. Domain code is grouped under `features`, while shared visual primitives remain under `components/ui`.
-
-Orders and Products follow the same replaceable data boundary:
-
-```text
-deterministic fixtures -> mock API -> TanStack Query hooks -> domain UI
+```mermaid
+flowchart LR
+  Routes[App Router] --> Features[Feature modules]
+  Features --> Query[TanStack Query]
+  Query --> APIs[Mock APIs]
+  APIs --> Fixtures[Deterministic data]
+  Forms[Settings forms] --> Repository[Zod repository]
+  Repository --> Storage[localStorage]
 ```
 
-Each mock API owns its search, filtering, sorting, latency, and pagination. Production UI components never import the complete fixture datasets directly. Shared concerns such as latency, safe return URLs, badges, and pagination live outside individual domains.
+Server Components compose routes, metadata, and the application shell. Client boundaries are used for queries, URL controls, charts, dialogs, navigation, and forms. Each feature owns its data boundary, business rules, hooks, UI, and tests.
 
-Customers intentionally begins from an existing domain relationship instead of an independent fixture dataset:
+See [Architecture](docs/architecture.md) for the detailed design and tradeoffs.
 
-```text
-Orders -> customer aggregation + deterministic profiles -> customer mock API -> TanStack Query -> Customer UI
+## Domain Model
+
+| Domain | Source | Scale | Responsibility |
+| --- | --- | ---: | --- |
+| Orders | Deterministic fixtures | 90 | Transactional source and order economics |
+| Products | Deterministic fixtures | 72 | Catalog, inventory, and merchandise performance |
+| Customers | Orders + profiles | 30 | Identity, value, recency, and segmentation |
+| Campaigns | Campaigns + customer attribution | 30 | Spend, budget, attributed revenue, and ROAS |
+| Analytics | Orders + Products + Customers | 3 periods | Derived business insights and comparisons |
+| Settings | Defaults + validated local storage | 3 sections | User preferences and browser-local persistence |
+
+```mermaid
+flowchart TD
+  Orders --> Products
+  Orders --> Customers
+  Customers --> Campaigns
+  Orders --> Analytics
+  Products --> Analytics
+  Customers --> Analytics
 ```
 
-Identity, order count, lifetime value, average order value, first and last order, and recency are derived once from Orders. Profiles only supply complementary fields such as phone, join date, and acquisition channel.
+## Data Flow
 
-Analytics composes the three established domains without duplicating them:
-
-```text
-Orders + Products + customer aggregates -> analytics aggregation -> mock API -> TanStack Query -> Analytics UI
+```mermaid
+sequenceDiagram
+  participant UI
+  participant Query as TanStack Query
+  participant API as Mock API
+  participant Domain as Fixtures / Repository
+  UI->>Query: request or mutation
+  Query->>API: asynchronous operation
+  API->>Domain: filter, aggregate, or persist
+  Domain-->>API: validated result
+  API-->>Query: response
+  Query-->>UI: cached state
 ```
 
-The selectable periods are inclusive UTC calendar windows ending on the Orders fixture reference date (`2026-08-28`). Each comparison window has the same number of days and ends immediately before its current window begins. Net sales include pending, processing, shipped, and delivered orders, while cancelled and refunded orders contribute to order counts and status distribution but not revenue or AOV. Product and category sales use item totals, so they are intentionally labeled as merchandise/product sales and may differ from order net sales after shipping, tax, discounts, cancellation, or refund rules. Active customers are unique customers who created any order in the period; their current derived segment and acquisition channel come from the Customer domain.
+## Business Rules
 
-Campaigns introduces a deterministic marketing domain while preserving existing customer and order ownership:
+Revenue includes pending, processing, shipped, and delivered orders. Cancelled and refunded orders remain visible in counts and distributions but are excluded from net sales, average order value, Analytics revenue, and Campaign revenue.
 
-```text
-Customers + Acquisition Channels + Orders
-                    -> first-touch attribution
-                    -> campaign aggregation
-                    -> mock API
-                    -> TanStack Query
-                    -> Campaign UI
-```
+Customer segmentation applies inactivity first, then loyalty, then recent tenure:
 
-Each attributed customer belongs to at most one campaign whose channel matches the customer acquisition channel. Direct and Organic Search customers remain unattributed. As a simple first-touch model, a campaign receives all available economically eligible orders from its attributed customers, including repeat orders outside the campaign date range; no multi-touch or date-window weighting is attempted. Attributed revenue and orders reuse the shared net-sales eligibility rule: pending, processing, shipped, and delivered orders are included; cancelled and refunded orders are excluded. ROAS is attributed revenue divided by spend and is unavailable when spend is zero. Budget utilization is spend divided by budget; deterministic fixtures never overspend.
+- **At risk:** repeat customer inactive for at least 24 days
+- **Loyal:** at least five orders or USD 1,800 lifetime value
+- **New:** no more than three orders and first purchase within 69 days
+- **Returning:** every other repeat relationship
 
-Settings uses an intentionally replaceable, browser-only persistence flow:
+Campaigns use deterministic first-touch attribution. Each attributed customer belongs to at most one campaign whose channel matches the customer's acquisition source. Analytics windows are inclusive UTC calendar periods anchored to **August 28, 2026**.
 
-```text
-React Hook Form + Zod -> TanStack Query mutation -> mock API -> validated repository -> localStorage
-                                                        -> query cache -> reset dirty state + toast
-```
+## Testing
 
-The repository owns the versioned `commerce-pulse.settings.v1` key and validates the entire stored document before use. Missing, corrupt, partial, or invalid data safely falls back to deterministic defaults. This is a frontend simulation rather than account-synced backend storage: preferences remain in the current browser only. General, Notifications, and Appearance save independently, while URL state identifies the active non-default section.
+The current release candidate has:
+
+- **32 Vitest files / 131 tests** covering business rules, cross-domain integrity, APIs, schemas, repositories, URL parsers, and focused components
+- **9 Playwright files / 51 tests** covering user workflows, persistence, metadata, keyboard behavior, return navigation, and responsive application flows
+- **7 axe accessibility smoke tests** within the Playwright suite, covering every primary route with no serious or critical violations
+
+Tests emphasize behavior and data integrity rather than implementation details. The Playwright server uses port **3100** to remain isolated from normal local development.
+
+## Quality
+
+GitHub Actions is configured for pushes and pull requests to `main` with two jobs:
+
+- **Quality:** clean install, lint, TypeScript, Vitest, and production build
+- **End-to-end:** clean install, Chromium setup, Playwright, and failure-only diagnostic artifacts
+
+The workflow is configured but must still be validated on GitHub after this branch is pushed. No unverified CI badge is displayed.
 
 ## Getting Started
 
-### Prerequisites
+### Requirements
 
-- Node.js 20.9 or newer
+- Node.js 22 or newer
 - npm
 
 ### Installation
 
 ```bash
-npm install
+npm ci
 ```
 
 ### Development
@@ -129,26 +156,22 @@ npm install
 npm run dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) in your browser.
+Open [http://localhost:3000](http://localhost:3000).
 
 ## Available Scripts
 
 | Command | Purpose |
 | --- | --- |
 | `npm run dev` | Start the development server |
-| `npm run build` | Create a production build |
-| `npm run start` | Start the production server |
+| `npm run build` | Create an optimized production build |
+| `npm run start` | Serve the production build |
 | `npm run lint` | Run ESLint |
 | `npm run typecheck` | Validate TypeScript without emitting files |
-| `npm run test` | Start Vitest in watch mode |
+| `npm test` | Start Vitest in watch mode |
 | `npm run test:run` | Run unit and component tests once |
-| `npm run test:e2e` | Run the Playwright suite |
+| `npm run test:e2e` | Run the Playwright and axe suite |
 
-## Testing
-
-Unit and component tests cover all established domain boundaries, Settings schemas and repository recovery, independent form behavior, validation, live preview, mutation retries, and unsaved-change confirmation. Playwright covers complete Orders, Products, Customers, Analytics, Campaigns, and Settings flows, including persistence across reloads.
-
-Playwright requires a browser binary on the first run:
+Playwright requires Chromium on the first run:
 
 ```bash
 npx playwright install chromium
@@ -157,34 +180,61 @@ npx playwright install chromium
 ## Project Structure
 
 ```text
-src/
-|-- app/                       # App Router layouts and routes
-|   `-- (dashboard)/           # Shared application shell and domain routes
-|-- components/
-|   |-- layout/                # Navigation, header, and shell components
-|   |-- providers/             # Application-level client providers
-|   `-- ui/                    # Shared badges, cards, buttons, and pagination
-|-- features/
-|   |-- dashboard/             # Dashboard-specific components and tests
-|   |-- orders/                # Orders fixtures, mock API, hooks, and UI
-|   |-- products/              # Products fixtures, inventory rules, API, hooks, and UI
-|   |-- customers/             # Profiles, aggregation, segments, API, hooks, and UI
-|   |-- analytics/             # Periods, cross-domain aggregation, API, hooks, and insight UI
-|   |-- campaigns/             # Fixtures, attribution, metrics, API, hooks, list, and details
-|   `-- settings/              # Schemas, repository, mock API, Query hooks, forms, and preview
-|-- hooks/                     # Shared React hooks
-|-- lib/                       # Reusable formatting and mock API utilities
-|-- mocks/                     # Dashboard fixtures and product projections
-`-- types/                     # Shared domain types
-e2e/                           # Playwright user flows
+commerce-pulse/
+├── .github/                 CI workflow and pull request template
+├── docs/                    Architecture, demo, release notes, and screenshots
+├── e2e/                     Playwright workflows and accessibility smoke tests
+├── src/
+│   ├── app/                 App Router routes, metadata, and error boundaries
+│   ├── components/          Shared layout, providers, and UI primitives
+│   ├── features/            Domain modules and colocated tests
+│   ├── hooks/               Shared React hooks
+│   ├── lib/                 Shared formatting, latency, and URL safety
+│   ├── mocks/               Dashboard projections
+│   └── types/               Shared domain contracts
+└── package.json
 ```
+
+## Accessibility
+
+CommercePulse uses semantic headings and landmarks, labelled forms and charts, table captions and headers, visible focus styles, keyboard-operable dialogs, native controls, reduced-motion handling, and textual status indicators. Automated axe coverage checks WCAG A/AA rules for serious and critical violations; keyboard and responsive behavior are also covered by Playwright and manual review.
+
+## Responsive Design
+
+The persistent desktop sidebar becomes an accessible mobile drawer. Dense tables adapt to task-focused cards, filters reflow without losing labels, and Settings navigation becomes horizontally scrollable. The release candidate is reviewed at 1440×1000, 768×1024, and 390×844.
+
+## Frontend Engineering Highlights
+
+- URL state instead of hidden global state for shareable, reload-safe workspaces
+- Deterministic fixtures and an explicit reference date for reproducible analytics
+- Cross-domain integrity between orders, products, customers, campaigns, and insights
+- TanStack Query behavior exercised through replaceable asynchronous mock APIs
+- Safe internal return URLs that reject external navigation targets
+- Accessible forms with schema validation, mutation feedback, and unsaved-change protection
+- First-touch campaign attribution and analytics derived from existing domain truth
+- Distinct desktop and mobile information architecture backed by 182 automated tests
+
+## Limitations
+
+- Frontend-only: mock APIs run in the browser and do not call a real service
+- Settings use localStorage and do not synchronize across browsers or users
+- Fixture data is deterministic and does not represent live commerce activity
+- No authentication, database, payment integration, or real notification delivery
+
+These constraints keep the project focused on observable frontend architecture and product behavior.
 
 ## Roadmap
 
-- Phase 8 — Portfolio Polish & Release
+After v1.0.0, optional extensions could include a real backend adapter, authenticated persistence, or deployment-specific observability. They are intentionally outside the release candidate scope.
 
-## Current Status
+## Release
 
-**Phase 7 — Settings, Forms & User Preferences**
+- [v1.0.0 release notes](docs/releases/v1.0.0.md)
+- [Changelog](CHANGELOG.md)
+- [Recruiter demo guide](docs/demo.md)
 
-The application foundation and all primary commerce workspaces are implemented. Settings now provides validated, independently persisted General, Notifications, and Appearance forms with deterministic loading and error states, mutation feedback, dirty/reset behavior, accessible unsaved-change confirmation, and responsive presentation. Phase 8 is reserved for final portfolio polish, CI, and release work.
+The package version is prepared as `1.0.0`, but no Git tag or GitHub Release has been created.
+
+## License
+
+No open-source license is currently included. A license should be selected explicitly by the repository owner before redistribution terms are offered.

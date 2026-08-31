@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import { Card } from "@/components/ui/card";
 import { DateRangeSelect } from "@/features/dashboard/components/date-range-select";
 import { MetricCard } from "@/features/dashboard/components/metric-card";
@@ -5,6 +6,8 @@ import { RecentOrdersTable } from "@/features/dashboard/components/recent-orders
 import { RevenueChart } from "@/features/dashboard/components/revenue-chart";
 import { TopProducts } from "@/features/dashboard/components/top-products";
 import { dashboardMetrics } from "@/mocks/dashboard";
+
+export const metadata: Metadata = { title: "Overview", description: "A 30-day snapshot of Northstar Store sales, orders and product performance." };
 
 export default function OverviewPage() {
   return (
