@@ -6,7 +6,7 @@ import { revenueData } from "@/mocks/dashboard";
 
 export function RevenueChart() {
   return (
-    <div className="h-[280px] w-full sm:h-[320px]" aria-label="Revenue over the last 30 days">
+    <div className="h-[280px] w-full sm:h-[320px]" role="img" aria-label="Daily net sales over the last 30 days">
       <ResponsiveContainer width="100%" height="100%">
         <AreaChart data={revenueData} margin={{ top: 12, right: 4, left: -12, bottom: 0 }}>
           <defs>
@@ -42,6 +42,7 @@ export function RevenueChart() {
             cursor={{ stroke: "#a5b4fc", strokeDasharray: "4 4" }}
           />
           <Area
+            isAnimationActive={false}
             type="monotone"
             dataKey="revenue"
             stroke="#4f46e5"
