@@ -15,7 +15,7 @@ function getDetailsHref(orderId: string, returnUrl: string) {
 export function OrdersCollection({ orders, returnUrl }: { orders: Order[]; returnUrl: string }) {
   return (
     <div className="overflow-hidden rounded-card border border-border bg-card">
-      <div className="hidden overflow-x-auto md:block">
+      <div className="hidden overflow-x-auto lg:block">
         <table className="w-full min-w-[900px] text-left text-sm">
           <caption className="sr-only">Customer orders</caption>
           <thead>
@@ -54,7 +54,7 @@ export function OrdersCollection({ orders, returnUrl }: { orders: Order[]; retur
         </table>
       </div>
 
-      <ul aria-label="Customer orders" className="divide-y divide-border md:hidden">
+      <ul aria-label="Customer orders" className="divide-y divide-border lg:hidden">
         {orders.map((order) => (
           <li key={order.id} className="p-4">
             <div className="flex items-start justify-between gap-3">

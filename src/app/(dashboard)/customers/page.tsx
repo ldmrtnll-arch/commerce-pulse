@@ -3,7 +3,7 @@ import { Suspense } from "react";
 import { CustomersWorkspace } from "@/features/customers/components/customers-workspace";
 import { CustomerMetricsSkeleton, CustomersSkeleton } from "@/features/customers/components/customers-states";
 
-export const metadata: Metadata = { title: "Customers" };
+export const metadata: Metadata = { title: "Customers", description: "Explore customer value, behavior and derived segments." };
 
 export default function CustomersPage() {
   return <div className="space-y-6">

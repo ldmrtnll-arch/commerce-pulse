@@ -3,7 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 
 export function AnalyticsSkeleton() {
-  return <div aria-label="Loading analytics" className="space-y-6"><div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">{Array.from({ length: 4 }, (_, index) => <Card key={index} className="h-36 animate-pulse bg-slate-50" />)}</div><Card className="h-[420px] animate-pulse bg-slate-50" /><div className="grid gap-6 xl:grid-cols-2"><Card className="h-96 animate-pulse bg-slate-50" /><Card className="h-96 animate-pulse bg-slate-50" /></div></div>;
+  return <div role="status" aria-label="Loading analytics" className="space-y-6"><div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">{Array.from({ length: 4 }, (_, index) => <Card key={index} className="h-36 animate-pulse bg-slate-50" />)}</div><Card className="h-[420px] animate-pulse bg-slate-50" /><div className="grid gap-6 xl:grid-cols-2"><Card className="h-96 animate-pulse bg-slate-50" /><Card className="h-96 animate-pulse bg-slate-50" /></div></div>;
 }
 
 export function AnalyticsErrorState({ onRetry }: { onRetry: () => void }) {

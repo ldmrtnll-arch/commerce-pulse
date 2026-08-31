@@ -3,7 +3,7 @@ import { Suspense } from "react";
 import { OrdersWorkspace } from "@/features/orders/components/orders-workspace";
 import { OrdersSkeleton } from "@/features/orders/components/orders-states";
 
-export const metadata: Metadata = { title: "Orders" };
+export const metadata: Metadata = { title: "Orders", description: "Search, filter and inspect Northstar Store orders." };
 
 export default function OrdersPage() {
   return (

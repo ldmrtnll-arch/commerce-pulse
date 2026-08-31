@@ -9,12 +9,13 @@ const geist = Geist({
 });
 
 export const metadata: Metadata = {
+  applicationName: "CommercePulse",
   title: {
     default: "CommercePulse",
     template: "%s | CommercePulse",
   },
   description:
-    "Modern commerce analytics dashboard for tracking sales, orders, customers and product performance.",
+    "Frontend-focused commerce analytics SaaS for orders, inventory, customers, campaigns, insights and store preferences.",
 };
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {

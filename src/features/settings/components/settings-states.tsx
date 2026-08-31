@@ -2,7 +2,7 @@ import { AlertCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 export function SettingsLoading() {
-  return <div aria-label="Loading settings" className="animate-pulse space-y-6"><div className="h-8 w-48 rounded bg-slate-200" /><div className="h-11 rounded-lg bg-slate-200" /><div className="rounded-card border border-border bg-card p-6"><div className="h-6 w-40 rounded bg-slate-200" /><div className="mt-6 grid gap-5 sm:grid-cols-2">{Array.from({ length: 5 }, (_, index) => <div key={index} className="h-16 rounded bg-slate-100" />)}</div></div></div>;
+  return <div role="status" aria-label="Loading settings" className="animate-pulse space-y-6"><div className="h-8 w-48 rounded bg-slate-200" /><div className="h-11 rounded-lg bg-slate-200" /><div className="rounded-card border border-border bg-card p-6"><div className="h-6 w-40 rounded bg-slate-200" /><div className="mt-6 grid gap-5 sm:grid-cols-2">{Array.from({ length: 5 }, (_, index) => <div key={index} className="h-16 rounded bg-slate-100" />)}</div></div></div>;
 }
 
 export function SettingsError({ onRetry }: { onRetry: () => void }) {

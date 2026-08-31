@@ -3,7 +3,7 @@ import { Suspense } from "react";
 import { ProductsWorkspace } from "@/features/products/components/products-workspace";
 import { InventoryMetricsSkeleton, ProductsSkeleton } from "@/features/products/components/products-states";
 
-export const metadata: Metadata = { title: "Products" };
+export const metadata: Metadata = { title: "Products", description: "Monitor product performance, lifecycle and inventory health." };
 
 export default function ProductsPage() {
   return <div className="space-y-6">
