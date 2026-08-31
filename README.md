@@ -4,7 +4,7 @@ CommercePulse is a frontend-focused SaaS dashboard for tracking sales, orders, c
 
 ## Overview
 
-This repository demonstrates a production-minded frontend application built with Next.js and TypeScript. The current phase combines a polished dashboard foundation with complete read-only Orders, Products, Customers, and Analytics workspaces driven by URL state and mock API boundaries.
+This repository demonstrates a production-minded frontend application built with Next.js and TypeScript. The current phase combines a polished dashboard foundation with complete read-only Orders, Products, Customers, Analytics, and Campaigns workspaces driven by URL state and mock API boundaries.
 
 The demo workspace represents **Northstar Store**. All information is deterministic mock data designed for stable development, testing, and screenshots.
 
@@ -30,6 +30,12 @@ The demo workspace represents **Northstar Store**. All information is determinis
 - Zero-filled daily revenue series plus product, category, customer-segment, acquisition-channel, and order-status insights
 - Cross-feature navigation from Analytics top products to Product Details with the selected period preserved
 - A reconciled Overview whose 30-day sales, orders, AOV, revenue series, and top products share the Analytics source of truth
+- A deterministic portfolio of 30 campaigns across Draft, Scheduled, Active, Paused, and Completed lifecycle states
+- First-touch campaign attribution aligned with existing acquisition channels and real Customers and Orders
+- Campaign budget, spend, attributed revenue, eligible orders, acquired customers, utilization, and ROAS metrics
+- Campaign search, status/channel filters, performance sorting, URL state, pagination, and responsive desktop/mobile presentation
+- Dedicated Campaign Details with performance, budget, information, and attributed-customer sections
+- Safe cross-feature navigation from Campaign Details to the existing Customer Details and back
 - TanStack Query caching with loading, background-fetching, empty, error, and retry states
 - Mock APIs with deterministic latency, controlled development errors, and paginated responses
 - Professional placeholder pages for future product areas
@@ -77,6 +83,19 @@ Orders + Products + customer aggregates -> analytics aggregation -> mock API -> 
 
 The selectable periods are inclusive UTC calendar windows ending on the Orders fixture reference date (`2026-08-28`). Each comparison window has the same number of days and ends immediately before its current window begins. Net sales include pending, processing, shipped, and delivered orders, while cancelled and refunded orders contribute to order counts and status distribution but not revenue or AOV. Product and category sales use item totals, so they are intentionally labeled as merchandise/product sales and may differ from order net sales after shipping, tax, discounts, cancellation, or refund rules. Active customers are unique customers who created any order in the period; their current derived segment and acquisition channel come from the Customer domain.
 
+Campaigns introduces a deterministic marketing domain while preserving existing customer and order ownership:
+
+```text
+Customers + Acquisition Channels + Orders
+                    -> first-touch attribution
+                    -> campaign aggregation
+                    -> mock API
+                    -> TanStack Query
+                    -> Campaign UI
+```
+
+Each attributed customer belongs to at most one campaign whose channel matches the customer acquisition channel. Direct and Organic Search customers remain unattributed. As a simple first-touch model, a campaign receives all available economically eligible orders from its attributed customers, including repeat orders outside the campaign date range; no multi-touch or date-window weighting is attempted. Attributed revenue and orders reuse the shared net-sales eligibility rule: pending, processing, shipped, and delivered orders are included; cancelled and refunded orders are excluded. ROAS is attributed revenue divided by spend and is unavailable when spend is zero. Budget utilization is spend divided by budget; deterministic fixtures never overspend.
+
 ## Getting Started
 
 ### Prerequisites
@@ -113,7 +132,7 @@ Open [http://localhost:3000](http://localhost:3000) in your browser.
 
 ## Testing
 
-Unit and component tests cover dashboard presentation, the Orders, Products, Customers, and Analytics boundaries, URL parameter normalization, inclusive date windows, revenue eligibility, zero-filled time series, stock-health and customer-segment boundaries, cross-domain integrity, semantic tables, status presentation, navigation, and asynchronous UI states. Playwright covers responsive navigation plus complete Orders, Products, Customers, and Analytics flows, including cross-feature navigation with preserved return state.
+Unit and component tests cover dashboard presentation, the Orders, Products, Customers, Analytics, and Campaigns boundaries, URL normalization, inclusive date windows, revenue eligibility, attribution integrity, ROAS, budget rules, zero-filled time series, cross-domain integrity, semantic tables, status presentation, navigation, and asynchronous UI states. Playwright covers complete Orders, Products, Customers, Analytics, and Campaigns flows, including cross-feature navigation with preserved return state.
 
 Playwright requires a browser binary on the first run:
 
@@ -136,7 +155,8 @@ src/
 |   |-- orders/                # Orders fixtures, mock API, hooks, and UI
 |   |-- products/              # Products fixtures, inventory rules, API, hooks, and UI
 |   |-- customers/             # Profiles, aggregation, segments, API, hooks, and UI
-|   `-- analytics/             # Periods, cross-domain aggregation, API, hooks, and insight UI
+|   |-- analytics/             # Periods, cross-domain aggregation, API, hooks, and insight UI
+|   `-- campaigns/             # Fixtures, attribution, metrics, API, hooks, list, and details
 |-- hooks/                     # Shared React hooks
 |-- lib/                       # Reusable formatting and mock API utilities
 |-- mocks/                     # Dashboard fixtures and product projections
@@ -146,14 +166,14 @@ e2e/                           # Playwright user flows
 
 ## Roadmap
 
-- Campaign performance reporting
 - Custom date ranges, comparison controls, and exportable reports
 - Validated settings forms
+- Final accessibility and interaction polish
 - Expanded component and end-to-end coverage
 - CI quality pipeline
 
 ## Current Status
 
-**Phase 5 — Analytics & Business Insights**
+**Phase 6 — Campaign Management & Marketing Performance**
 
-The application foundation, overview experience, read-only Orders workflow, Products and Inventory management, derived Customer Management and Segmentation workflow, and cross-domain Analytics experience are implemented. Campaign and settings workspaces intentionally remain concise placeholders for later phases.
+The application foundation, overview experience, read-only Orders workflow, Products and Inventory management, derived Customer Management and Segmentation workflow, cross-domain Analytics, and read-only Campaign Management are implemented. Settings remains the final placeholder for the next phase.
