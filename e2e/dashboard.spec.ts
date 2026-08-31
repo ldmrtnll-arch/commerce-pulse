@@ -4,7 +4,7 @@ test("loads the dashboard and navigates to orders", async ({ page }) => {
   await page.goto("/");
 
   await expect(page.getByRole("heading", { name: "Overview", exact: true })).toBeVisible();
-  await expect(page.getByText("$128,430.52")).toBeVisible();
+  await expect(page.getByText("$10,912.52").first()).toBeVisible();
 
   await page.getByRole("link", { name: "Orders", exact: true }).click();
   await expect(page).toHaveURL(/\/orders$/);

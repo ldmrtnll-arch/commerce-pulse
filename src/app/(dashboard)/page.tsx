@@ -27,9 +27,9 @@ export default function OverviewPage() {
           <div className="mb-4 flex items-start justify-between">
             <div>
               <h2 className="text-base font-semibold text-slate-950">Revenue overview</h2>
-              <p className="mt-1 text-sm text-muted-foreground">Daily gross revenue across all sales channels.</p>
+              <p className="mt-1 text-sm text-muted-foreground">Daily net sales for the latest fixture-backed 30-day period.</p>
             </div>
-            <span className="hidden rounded-md bg-emerald-50 px-2 py-1 text-xs font-medium text-emerald-700 sm:inline">+12.5%</span>
+            <span className="hidden rounded-md bg-slate-100 px-2 py-1 text-xs font-medium text-slate-600 sm:inline">Last 30 days</span>
           </div>
           <RevenueChart />
         </Card>

@@ -1,4 +1,4 @@
-export type MetricTrend = "up" | "down";
+export type MetricTrend = "up" | "down" | "neutral";
 
 export interface DashboardMetric {
   label: string;

@@ -5,32 +5,21 @@ import type {
   TopProduct,
 } from "@/types/dashboard";
 import { orderFixtures } from "@/features/orders/fixtures/orders";
-import { productFixtures } from "@/features/products/fixtures/products";
+import { aggregateAnalytics } from "@/features/analytics/lib/analytics-aggregation";
+import { getProductCategoryLabel } from "@/features/products/lib/product-labels";
+import { formatCurrency } from "@/lib/formatters";
+
+const analytics = aggregateAnalytics("30d");
+const metric = (value: number | null) => ({ change: Math.abs(value ?? 0), trend: value === null || value === 0 ? "neutral" as const : value > 0 ? "up" as const : "down" as const });
 
 export const dashboardMetrics: DashboardMetric[] = [
-  { label: "Total revenue", value: "$128,430.52", change: 12.5, trend: "up" },
-  { label: "Orders", value: "1,482", change: 8.2, trend: "up" },
-  { label: "Average order value", value: "$86.66", change: 2.1, trend: "up" },
+  { label: "Net sales", value: formatCurrency(analytics.summary.revenue.current), ...metric(analytics.summary.revenue.percentageChange) },
+  { label: "Orders", value: analytics.summary.orders.current.toLocaleString("en-US"), ...metric(analytics.summary.orders.percentageChange) },
+  { label: "Average order value", value: formatCurrency(analytics.summary.averageOrderValue.current), ...metric(analytics.summary.averageOrderValue.percentageChange) },
   { label: "Conversion rate", value: "3.24%", change: 0.4, trend: "down" },
 ];
 
-export const revenueData: RevenuePoint[] = [
-  { date: "Aug 1", revenue: 3200 }, { date: "Aug 2", revenue: 3900 },
-  { date: "Aug 3", revenue: 3500 }, { date: "Aug 4", revenue: 4400 },
-  { date: "Aug 5", revenue: 4100 }, { date: "Aug 6", revenue: 4900 },
-  { date: "Aug 7", revenue: 4600 }, { date: "Aug 8", revenue: 5200 },
-  { date: "Aug 9", revenue: 4800 }, { date: "Aug 10", revenue: 5700 },
-  { date: "Aug 11", revenue: 5300 }, { date: "Aug 12", revenue: 6100 },
-  { date: "Aug 13", revenue: 5800 }, { date: "Aug 14", revenue: 6400 },
-  { date: "Aug 15", revenue: 5900 }, { date: "Aug 16", revenue: 6800 },
-  { date: "Aug 17", revenue: 6300 }, { date: "Aug 18", revenue: 7100 },
-  { date: "Aug 19", revenue: 6900 }, { date: "Aug 20", revenue: 7500 },
-  { date: "Aug 21", revenue: 7200 }, { date: "Aug 22", revenue: 7900 },
-  { date: "Aug 23", revenue: 7600 }, { date: "Aug 24", revenue: 8300 },
-  { date: "Aug 25", revenue: 8100 }, { date: "Aug 26", revenue: 8700 },
-  { date: "Aug 27", revenue: 8400 }, { date: "Aug 28", revenue: 9200 },
-  { date: "Aug 29", revenue: 8900 }, { date: "Aug 30", revenue: 9600 },
-];
+export const revenueData: RevenuePoint[] = analytics.revenueSeries.map((point) => ({ date: point.label, revenue: point.revenue }));
 
 export const recentOrders: RecentOrder[] = orderFixtures.slice(0, 5).map((order) => ({
   id: order.number,
@@ -40,12 +29,10 @@ export const recentOrders: RecentOrder[] = orderFixtures.slice(0, 5).map((order)
   total: order.total,
 }));
 
-export const topProducts: TopProduct[] = [...productFixtures]
-  .sort((left, right) => right.unitsSold - left.unitsSold)
-  .slice(0, 4)
+export const topProducts: TopProduct[] = analytics.productPerformance.slice(0, 4)
   .map((product) => ({
     name: product.name,
-    category: product.category.charAt(0).toUpperCase() + product.category.slice(1),
+    category: getProductCategoryLabel(product.category),
     unitsSold: product.unitsSold,
     revenue: product.revenue,
   }));

@@ -4,7 +4,7 @@ CommercePulse is a frontend-focused SaaS dashboard for tracking sales, orders, c
 
 ## Overview
 
-This repository demonstrates a production-minded frontend application built with Next.js and TypeScript. The current phase combines a polished dashboard foundation with complete read-only Orders, Products, and Customers workspaces driven by URL state and mock API boundaries.
+This repository demonstrates a production-minded frontend application built with Next.js and TypeScript. The current phase combines a polished dashboard foundation with complete read-only Orders, Products, Customers, and Analytics workspaces driven by URL state and mock API boundaries.
 
 The demo workspace represents **Northstar Store**. All information is deterministic mock data designed for stable development, testing, and screenshots.
 
@@ -25,6 +25,11 @@ The demo workspace represents **Northstar Store**. All information is determinis
 - Lifetime value, average order value, deterministic recency, and global customer metrics
 - Dedicated customer details with contact information, segment insight, and real order history
 - Cross-feature navigation from Customer Details to the existing Order Details with safe return state
+- Analytics periods for the latest 7, 30, and 90 days, anchored to the deterministic Aug 28, 2026 dataset reference date
+- Net-sales, order, average-order-value, and active-customer KPIs with equal-length prior-period comparisons
+- Zero-filled daily revenue series plus product, category, customer-segment, acquisition-channel, and order-status insights
+- Cross-feature navigation from Analytics top products to Product Details with the selected period preserved
+- A reconciled Overview whose 30-day sales, orders, AOV, revenue series, and top products share the Analytics source of truth
 - TanStack Query caching with loading, background-fetching, empty, error, and retry states
 - Mock APIs with deterministic latency, controlled development errors, and paginated responses
 - Professional placeholder pages for future product areas
@@ -64,6 +69,14 @@ Orders -> customer aggregation + deterministic profiles -> customer mock API -> 
 
 Identity, order count, lifetime value, average order value, first and last order, and recency are derived once from Orders. Profiles only supply complementary fields such as phone, join date, and acquisition channel.
 
+Analytics composes the three established domains without duplicating them:
+
+```text
+Orders + Products + customer aggregates -> analytics aggregation -> mock API -> TanStack Query -> Analytics UI
+```
+
+The selectable periods are inclusive UTC calendar windows ending on the Orders fixture reference date (`2026-08-28`). Each comparison window has the same number of days and ends immediately before its current window begins. Net sales include pending, processing, shipped, and delivered orders, while cancelled and refunded orders contribute to order counts and status distribution but not revenue or AOV. Product and category sales use item totals, so they are intentionally labeled as merchandise/product sales and may differ from order net sales after shipping, tax, discounts, cancellation, or refund rules. Active customers are unique customers who created any order in the period; their current derived segment and acquisition channel come from the Customer domain.
+
 ## Getting Started
 
 ### Prerequisites
@@ -100,7 +113,7 @@ Open [http://localhost:3000](http://localhost:3000) in your browser.
 
 ## Testing
 
-Unit and component tests cover dashboard presentation, the Orders, Products, and Customers mock APIs, URL parameter normalization, stock-health and customer-segment boundaries, cross-domain integrity, status presentation, navigation, and asynchronous UI states. Playwright covers responsive navigation plus complete Orders, Products, and Customers flows, including cross-feature navigation with preserved return state.
+Unit and component tests cover dashboard presentation, the Orders, Products, Customers, and Analytics boundaries, URL parameter normalization, inclusive date windows, revenue eligibility, zero-filled time series, stock-health and customer-segment boundaries, cross-domain integrity, semantic tables, status presentation, navigation, and asynchronous UI states. Playwright covers responsive navigation plus complete Orders, Products, Customers, and Analytics flows, including cross-feature navigation with preserved return state.
 
 Playwright requires a browser binary on the first run:
 
@@ -122,7 +135,8 @@ src/
 |   |-- dashboard/             # Dashboard-specific components and tests
 |   |-- orders/                # Orders fixtures, mock API, hooks, and UI
 |   |-- products/              # Products fixtures, inventory rules, API, hooks, and UI
-|   `-- customers/             # Profiles, aggregation, segments, API, hooks, and UI
+|   |-- customers/             # Profiles, aggregation, segments, API, hooks, and UI
+|   `-- analytics/             # Periods, cross-domain aggregation, API, hooks, and insight UI
 |-- hooks/                     # Shared React hooks
 |-- lib/                       # Reusable formatting and mock API utilities
 |-- mocks/                     # Dashboard fixtures and product projections
@@ -132,14 +146,14 @@ e2e/                           # Playwright user flows
 
 ## Roadmap
 
-- Customer cohort and behavioral analytics
 - Campaign performance reporting
+- Custom date ranges, comparison controls, and exportable reports
 - Validated settings forms
 - Expanded component and end-to-end coverage
 - CI quality pipeline
 
 ## Current Status
 
-**Phase 4 — Customer Management & Segmentation**
+**Phase 5 — Analytics & Business Insights**
 
-The application foundation, overview experience, read-only Orders workflow, Products and Inventory management, and derived Customer Management and Segmentation workflow are implemented. Analytics, campaign, and settings workspaces intentionally remain concise placeholders for later phases.
+The application foundation, overview experience, read-only Orders workflow, Products and Inventory management, derived Customer Management and Segmentation workflow, and cross-domain Analytics experience are implemented. Campaign and settings workspaces intentionally remain concise placeholders for later phases.
